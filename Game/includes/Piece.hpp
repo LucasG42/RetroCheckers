@@ -10,6 +10,7 @@ private:
   sf::Sprite sprite;
 
 public:
+  bool isSelected = false;
   Color color;
   static const int textureWidth = 50;
   static const int textureHeigth = 50;

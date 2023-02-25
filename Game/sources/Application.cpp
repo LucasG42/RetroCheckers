@@ -8,10 +8,10 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
+Board board;
 int Application::InitApp() {
   sf::RenderWindow window(sf::VideoMode(windowsWidth, windowsHeigth), title);
   sf::Color backgroundColor(12, 112, 39);
-  Board board;
   Player player;
 
   while (window.isOpen()) {
@@ -24,8 +24,7 @@ int Application::InitApp() {
       if (event.type == sf::Event::MouseButtonPressed) {
 
         player.MouseIsClicked({sf::Mouse::getPosition(window).x,
-                               sf::Mouse::getPosition(window).y},
-                              board);
+                               sf::Mouse::getPosition(window).y});
       }
     }
     window.clear(backgroundColor);

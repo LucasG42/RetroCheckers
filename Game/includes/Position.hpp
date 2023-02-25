@@ -10,6 +10,7 @@ public:
                                               int textureHeigth);
   Position RelativePositionToAbsolutePosition(int textureWidth,
                                               int textureHeigth);
+  int RelativePositionToIndex();
   bool operator==(Position b);
 };
 #endif

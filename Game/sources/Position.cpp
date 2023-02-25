@@ -1,7 +1,11 @@
 #include "../includes/Position.hpp"
+#include "../includes/Board.hpp"
 #include "../includes/GameTypes.hpp"
-void Position::showPosition() { std::cout << "(" << x << "," << y << ")\n"; }
 
+extern Board board;
+
+void Position::showPosition() { std::cout << "(" << x << "," << y << ")\n"; }
+bool Position::operator==(Position b) { return (x == b.x && y == b.y); }
 Position Position::RelativePositionToAbsolutePosition(int textureWidth,
                                                       int textureHeigth) {
   return {((x * textureWidth) + StartPosition.x),
@@ -13,5 +17,9 @@ Position Position::AbsolutePositionToRelativePosition(int textureWidth,
   return {(x - StartPosition.x) / textureWidth,
           (y - StartPosition.y) / textureHeigth};
 }
+int Position::RelativePositionToIndex() {
 
-bool Position::operator==(Position b) { return (x == b.x && y == b.y); }
+  int index = (y * 8 + x);
+
+  return index;
+}

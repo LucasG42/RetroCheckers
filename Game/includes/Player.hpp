@@ -2,12 +2,14 @@
 #define PLAYER_H
 #include "Board.hpp"
 #include "Position.hpp"
+#include <utility>
 #include <vector>
 class Player {
 private:
-  std::vector<Tile> GetAvaliablesMoves(Tile &tile, std::vector<Tile> &tiles);
+  std::vector<std::pair<Tile &, const sf::Color>>
+  GetAvaliablesMoves(Tile &tile, std::vector<Tile> &tiles);
 
 public:
-  void MouseIsClicked(Position ClickPosition, Board &board);
+  void MouseIsClicked(Position ClickPosition);
 };
 #endif

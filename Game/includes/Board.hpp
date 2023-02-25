@@ -6,13 +6,13 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 class Board {
-  const int width = 8;
-  const int heigth = 8;
-
 private:
   void Populate(sf::RenderWindow &window);
 
 public:
+  const int width = 8;
+  const int heigth = 8;
+
   bool hasInitialized = false;
   std::vector<Tile> tiles;
   std::vector<Piece> piece;
