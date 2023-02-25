@@ -62,17 +62,24 @@ Player::GetAvaliablesMoves(Tile &tile, std::vector<Tile> &tiles) {
 }
 void Player::MouseIsClicked(Position ClickPosition) {
   auto &tiles = board.tiles;
+  int i = 0;
   for (auto &tile : tiles) {
-    if (tile.hasPiece) {
-      Position pos = ClickPosition.AbsolutePositionToRelativePosition(
-          Tile::textureWidth, Tile::textureHeigth);
-      if (pos == tile.relativePosition) {
+    std::cout << "Limpando numero: " << i++ << "\n";
+    tile.UnSelect();
+  }
+  for (auto &tile : tiles) {
+    Position pos = ClickPosition.AbsolutePositionToRelativePosition(
+        Tile::textureWidth, Tile::textureHeigth);
+    if (pos == tile.relativePosition) {
+      if (tile.hasPiece) {
+        std::cout << "Cliquei na numero: " << i << "\n";
+        tile.piece->isSelected = true;
         auto tilesToColorize = Player::GetAvaliablesMoves(tile, tiles);
         for (auto &tileToColirize : tilesToColorize) {
           tileToColirize.first.Colorize(tileToColirize.second);
         }
-        break;
       }
+      break;
     }
   }
 }

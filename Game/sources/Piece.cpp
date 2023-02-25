@@ -32,6 +32,7 @@ Piece::Piece(Color color, Type type, Position position) {
     std::cout << "Erro ao carregar textura"
               << "\n";
   }
+  isSelected = false;
   this->type = type;
   this->color = color;
   this->relativePosition = {((position.x - StartPosition.x) / textureWidth),

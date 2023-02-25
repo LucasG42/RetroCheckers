@@ -72,6 +72,7 @@ void Board::Populate(sf::RenderWindow &window) {
 void Board::Update(sf::RenderWindow &window) {
   for (auto tile : tiles) {
     window.draw(tile.getSprite());
+    window.draw(tile.getSelectedSprite());
     if (tile.hasPiece) {
       window.draw(tile.piece->getSprite());
     }
