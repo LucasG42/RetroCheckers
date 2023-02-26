@@ -6,10 +6,12 @@
 #include <vector>
 class Player {
 private:
-  std::vector<std::pair<Tile &, const sf::Color>>
-  GetAvaliablesMoves(Tile &tile, std::vector<Tile> &tiles);
+  std::vector<std::tuple<Tile &, const sf::Color, Tile *>>
+  GetAvaliablesMoves(Piece &piece, std::vector<Tile> &tiles);
+  Color color = Color::white;
 
 public:
+  void invertColor();
   void MouseIsClicked(Position ClickPosition);
 };
 #endif

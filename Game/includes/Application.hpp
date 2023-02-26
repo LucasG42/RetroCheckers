@@ -1,7 +1,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
-constexpr int windowsHeigth = 640;
-constexpr int windowsWidth = 800;
+constexpr int windowsHeigth = 480;
+constexpr int windowsWidth = 480;
 constexpr char title[] = "MyCheckers";
 class Application {
 public:

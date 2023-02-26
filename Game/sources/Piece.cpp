@@ -6,9 +6,10 @@
 #include <iostream>
 #include <string>
 
-Piece::Piece(Color color, Type type, Position position) {
+Piece::Piece(Color color, Type type, Position absolutePosition,
+             Position relativePosition) {
   std::string filepath;
-  if (color) {
+  if (color == white) {
     // White
     if (type) {
       // King
@@ -35,11 +36,10 @@ Piece::Piece(Color color, Type type, Position position) {
   isSelected = false;
   this->type = type;
   this->color = color;
-  this->relativePosition = {((position.x - StartPosition.x) / textureWidth),
-                            ((position.y - StartPosition.y) / textureHeigth)};
-  this->position = position;
+  this->relativePosition = relativePosition;
+  this->absolutePosition = absolutePosition;
   sprite.setTexture(texture);
-  sprite.setPosition(position.x, position.y);
+  sprite.setPosition(absolutePosition.x, absolutePosition.y);
 }
 
 sf::Sprite Piece::getSprite() { return sprite; }
@@ -58,11 +58,12 @@ void Piece::turnKing() {
   sprite.setTexture(texture);
 }
 
-/*void Piece::getAvaliablesMoves(int index, Board &board) {
-  // change to width of board
-  auto &tiles = board.tiles;
-  if (tiles[index + 8].hasPiece == false) {
-    tiles[index + 8].getSprite().setColor(sf::Color(200, 200, 50));
-  }
+void Piece::Move(Tile &tile) {
+  myTile = &tile;
+  relativePosition = tile.relativePosition;
+  absolutePosition = tile.relativePosition.RelativePositionToAbsolutePosition(
+      tile.textureWidth, tile.textureHeigth);
+  absolutePosition.x += 5;
+  absolutePosition.y += 5;
+  sprite.setPosition(absolutePosition.x, absolutePosition.y);
 }
-*/

@@ -4,6 +4,7 @@
 #include "../includes/Piece.hpp"
 #include "../includes/Player.hpp"
 #include "../includes/Tile.hpp"
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
@@ -22,7 +23,6 @@ int Application::InitApp() {
         window.close();
 
       if (event.type == sf::Event::MouseButtonPressed) {
-
         player.MouseIsClicked({sf::Mouse::getPosition(window).x,
                                sf::Mouse::getPosition(window).y});
       }

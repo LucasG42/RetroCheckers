@@ -15,10 +15,12 @@ public:
 
   bool hasInitialized = false;
   std::vector<Tile> tiles;
-  std::vector<Piece> piece;
+  std::vector<Piece> pieces;
+  Piece *selectedPiece = nullptr;
+  Tile *previousTile = nullptr;
+  Tile *captureTile = nullptr;
   void InitBoard(sf::RenderWindow &window);
   void CreateBoard(sf::RenderWindow &window);
-  int getBoardSize();
   void Update(sf::RenderWindow &window);
 };
 #endif

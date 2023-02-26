@@ -1,7 +1,6 @@
 #ifndef TILE_H
 #define TILE_H
 #include "GameTypes.hpp"
-#include "Piece.hpp"
 #include <SFML/Graphics.hpp>
 class Tile {
 
@@ -14,10 +13,10 @@ public:
   Position relativePosition;
   Color color;
   bool hasPiece = false;
+  bool isColorized = false;
   static const int textureWidth = 60;
   static const int textureHeigth = 60;
   void togglePiece();
-  Piece *piece = nullptr;
   Tile(Color color, Position position);
   sf::Sprite getSprite();
   sf::Sprite getSelectedSprite();

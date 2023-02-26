@@ -3,81 +3,130 @@
 #include "../includes/Position.hpp"
 #include <utility>
 extern Board board;
-std::vector<std::pair<Tile &, const sf::Color>>
-Player::GetAvaliablesMoves(Tile &tile, std::vector<Tile> &tiles) {
+static void GetAvaliablesMovesByDirection(
+    int index, Piece &piece, std::vector<Tile> &tiles, Direction direction,
+    int pivot,
+    std::vector<std::tuple<Tile &, const sf::Color, Tile *>> &avaliableMoves) {
 
-  std::vector<std::pair<Tile &, const sf::Color>> avaliableMoves;
-  tile.relativePosition.showPosition();
+  Tile *captureTile = nullptr;
+  index += direction;
+  if (tiles[index].relativePosition.y == pivot + piece.relativePosition.y) {
+    if (tiles[index].hasPiece) {
+      for (auto &target : board.pieces) {
+        if (target.relativePosition == tiles[index].relativePosition) {
+          if (target.color != piece.color) {
+            if (tiles[index + direction + (piece.color * board.width)]
+                    .hasPiece == false) {
+              captureTile = &(tiles[index]);
+              index += pivot * board.width;
+              index += direction;
+              if (tiles[index].color == dark) {
+                avaliableMoves.push_back(
+                    std::tuple<Tile &, const sf::Color, Tile *>(
+                        tiles[index], RED, captureTile));
+              }
+            }
+            break;
+          }
+        }
+      }
+    } else {
+      avaliableMoves.push_back(std::tuple<Tile &, const sf::Color, Tile *>(
+          tiles[index], GREEN, captureTile));
+    }
+  }
+}
+
+std::vector<std::tuple<Tile &, const sf::Color, Tile *>>
+Player::GetAvaliablesMoves(Piece &piece, std::vector<Tile> &tiles) {
+  std::vector<std::tuple<Tile &, const sf::Color, Tile *>> avaliableMoves;
   avaliableMoves.reserve(4);
-  int pivot = 1;
-  if (tile.piece->color == Color::white) {
-    pivot = -1;
+  int index = piece.relativePosition.RelativePositionToIndex();
+  index = index + piece.color * board.width;
+  int pivot = piece.color;
+  GetAvaliablesMovesByDirection(index, piece, tiles, Direction::right, pivot,
+                                avaliableMoves);
+  GetAvaliablesMovesByDirection(index, piece, tiles, Direction::left, pivot,
+                                avaliableMoves);
+  if (piece.type == Type::king) {
+    index -= piece.color * board.width;
+    index -= piece.color * board.width;
+    pivot = -pivot;
+    GetAvaliablesMovesByDirection(index, piece, tiles, Direction::right, pivot,
+                                  avaliableMoves);
+    GetAvaliablesMovesByDirection(index, piece, tiles, Direction::left, pivot,
+                                  avaliableMoves);
   }
-  int index = tile.relativePosition.RelativePositionToIndex();
-  index = index + pivot * 8; // a frente
-
-  int leftIndex = index - 1;
-
-  if (leftIndex >= 0) {
-    if (!tiles[leftIndex].hasPiece && tiles[leftIndex].relativePosition.y ==
-                                          pivot + tile.relativePosition.y) {
-      avaliableMoves.push_back(
-          std::pair<Tile &, const sf::Color>(tiles[leftIndex], GREEN));
-    }
-  }
-
-  int rightIndex = index + 1;
-  if (rightIndex <= 63) {
-    if (!tiles[rightIndex].hasPiece && tiles[rightIndex].relativePosition.y ==
-                                           pivot + tile.relativePosition.y) {
-      avaliableMoves.push_back(
-          std::pair<Tile &, const sf::Color>(tiles[rightIndex], GREEN));
-    }
-  }
-
-  if (tile.piece->type == Type::king) {
-    index -= pivot * 8;
-    index -= pivot * 8;
-
-    int leftIndex = index - 1;
-    if (leftIndex >= 0) {
-      if (!tiles[leftIndex].hasPiece && tiles[leftIndex].relativePosition.y ==
-                                            pivot + tile.relativePosition.y) {
-        avaliableMoves.push_back(
-            std::pair<Tile &, const sf::Color>(tiles[leftIndex], GREEN));
-      }
-    }
-
-    int rightIndex = index + 1;
-    if (rightIndex <= 63) {
-      if (!tiles[rightIndex].hasPiece && tiles[rightIndex].relativePosition.y ==
-                                             pivot + tile.relativePosition.y) {
-        avaliableMoves.push_back(
-            std::pair<Tile &, const sf::Color>(tiles[rightIndex], GREEN));
-      }
-    }
-  }
-  avaliableMoves.shrink_to_fit();
   return avaliableMoves;
 }
+
+void Player::invertColor() {
+  if (color == white) {
+    color = dark;
+  } else {
+    color = white;
+  }
+}
 void Player::MouseIsClicked(Position ClickPosition) {
+  static std::vector<std::tuple<Tile &, const sf::Color, Tile *>>
+      tilesToColorize;
+  auto &pieces = board.pieces;
   auto &tiles = board.tiles;
-  int i = 0;
+
   for (auto &tile : tiles) {
-    std::cout << "Limpando numero: " << i++ << "\n";
     tile.UnSelect();
   }
+
   for (auto &tile : tiles) {
     Position pos = ClickPosition.AbsolutePositionToRelativePosition(
         Tile::textureWidth, Tile::textureHeigth);
     if (pos == tile.relativePosition) {
       if (tile.hasPiece) {
-        std::cout << "Cliquei na numero: " << i << "\n";
-        tile.piece->isSelected = true;
-        auto tilesToColorize = Player::GetAvaliablesMoves(tile, tiles);
-        for (auto &tileToColirize : tilesToColorize) {
-          tileToColirize.first.Colorize(tileToColirize.second);
+        for (auto &piece : pieces) {
+          if (piece.relativePosition == tile.relativePosition) {
+            if (piece.color == color) {
+              for (auto &tile : tiles) {
+                tile.isColorized = false;
+              }
+              board.selectedPiece = &piece;
+              tilesToColorize = Player::GetAvaliablesMoves(piece, tiles);
+              board.previousTile = &tile;
+              for (auto &tileToColirize : tilesToColorize) {
+                std::get<0>(tileToColirize).isColorized = true;
+                std::get<0>(tileToColirize)
+                    .Colorize(std::get<1>(tileToColirize));
+              }
+              break;
+            }
+          }
         }
+      } else if (tile.isColorized) {
+        if (tile.relativePosition.y == 7 || tile.relativePosition.y == 0) {
+          board.selectedPiece->turnKing();
+        }
+        for (auto &tileToColorize : tilesToColorize) {
+          auto &ColorizedTile = std::get<0>(tileToColorize);
+          auto &color = std::get<1>(tileToColorize);
+          auto &CapturedTile = std::get<2>(tileToColorize);
+          ColorizedTile.isColorized = false;
+          if (ColorizedTile.relativePosition == tile.relativePosition) {
+            if (color == RED && CapturedTile != nullptr) {
+              for (auto &piece : pieces) {
+                if (piece.relativePosition == CapturedTile->relativePosition) {
+                  piece.relativePosition.showPosition();
+                  piece.alive = false;
+                  CapturedTile->togglePiece();
+                  break;
+                }
+              }
+            }
+          }
+        }
+
+        tile.togglePiece();
+        board.previousTile->togglePiece();
+        board.selectedPiece->Move(tile);
+        invertColor();
       }
       break;
     }

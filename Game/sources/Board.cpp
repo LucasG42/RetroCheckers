@@ -3,8 +3,10 @@
 #include "../includes/Piece.hpp"
 #include "../includes/Tile.hpp"
 #include <SFML/Graphics.hpp>
+#include <chrono>
 #include <iostream>
 #include <math.h>
+#include <thread>
 
 Color invertColor(Color color) {
   if (color == Color::white) {
@@ -28,7 +30,7 @@ void Board::CreateBoard(sf::RenderWindow &window) {
     tile = new Tile(color, pos);
     tiles.push_back(*tile);
     pos.x += Tile::textureWidth;
-    if (i % 8 == 0) {
+    if (i % width == 0) {
       pos.y += Tile::textureHeigth;
       pos.x = StartPosition.x;
       color = invertColor(color);
@@ -37,44 +39,50 @@ void Board::CreateBoard(sf::RenderWindow &window) {
   }
 }
 void Board::Populate(sf::RenderWindow &window) {
-
-  int i = 0;
+  Piece *piece;
   Position pos;
   int ratio = 5;
   int index = 0;
-  for (int i = 0; i < 24; i += 2) {
-    index = i;
-    if (i > 7 && i < 15) {
-      index = index + 1;
-    }
-    pos = {tiles[index].getPosition().x + ratio,
-           tiles[index].getPosition().y + ratio};
+  std::vector<Position> whiteInitialPosition = {
+      {0, 5}, {2, 5}, {4, 5}, {6, 5}, {1, 6}, {3, 6},
+      {5, 6}, {7, 6}, {0, 7}, {2, 7}, {4, 7}, {6, 7},
+  };
+  std::vector<Position> blackInitialPosition = {
+      {1, 0}, {3, 0}, {5, 0}, {7, 0}, {0, 1}, {2, 1},
+      {4, 1}, {6, 1}, {1, 2}, {3, 2}, {5, 2}, {7, 2},
+  };
+
+  for (Position initPos : whiteInitialPosition) {
+    int index = initPos.RelativePositionToIndex();
+    pos = {
+        tiles[index].getPosition().x + ratio,
+        tiles[index].getPosition().y + ratio,
+    };
     tiles[index].togglePiece();
-    Piece *piece = new Piece(Color::dark, Type::man, pos);
-    tiles[index].piece = piece;
-    window.draw(piece->getSprite());
+    piece = new Piece(Color::white, Type::man, pos, initPos);
+    pieces.push_back(*piece);
   }
 
-  for (int i = 40; i < 64; i += 2) {
-    index = i;
-    if (i > 47 && i < 55) {
-      index = index + 1;
-    }
-    pos = {tiles[index].getPosition().x + ratio,
-           tiles[index].getPosition().y + ratio};
+  for (Position initPos : blackInitialPosition) {
+    int index = initPos.RelativePositionToIndex();
+    pos = {
+        tiles[index].getPosition().x + ratio,
+        tiles[index].getPosition().y + ratio,
+    };
     tiles[index].togglePiece();
-    Piece *piece = new Piece(Color::white, Type::man, pos);
-    tiles[index].piece = piece;
-    window.draw(piece->getSprite());
+    piece = new Piece(Color::dark, Type::man, pos, initPos);
+    pieces.push_back(*piece);
   }
-  // make it responsible to differetns types of boards
 }
 void Board::Update(sf::RenderWindow &window) {
-  for (auto tile : tiles) {
+
+  for (auto &tile : tiles) {
     window.draw(tile.getSprite());
     window.draw(tile.getSelectedSprite());
-    if (tile.hasPiece) {
-      window.draw(tile.piece->getSprite());
+  }
+  for (auto piece : pieces) {
+    if (piece.alive == true) {
+      window.draw(piece.getSprite());
     }
   }
 };

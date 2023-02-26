@@ -1,11 +1,9 @@
 #include "../includes/Tile.hpp"
-
+#include "../includes/GameTypes.hpp"
+#include "../includes/Position.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
-
-#include "../includes/GameTypes.hpp"
-#include "../includes/Position.hpp"
 
 Tile::Tile(Color color, Position position) {
   this->color = color;
@@ -33,7 +31,7 @@ Tile::Tile(Color color, Position position) {
 sf::Sprite Tile::getSprite() { return sprite; }
 
 sf::Sprite Tile::getSelectedSprite() { return selectedSprite; }
-void Tile::togglePiece() { hasPiece = !hasPiece; }
+void Tile::togglePiece() { this->hasPiece = !this->hasPiece; }
 Position Tile::getPosition() { return absolutePosition; }
 
 void Tile::Colorize(sf::Color color) { selectedSprite.setColor(color); };
