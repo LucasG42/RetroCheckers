@@ -31,21 +31,5 @@ This was build in my Linux machine with SFML installed in system, but will be mo
 g++  Game/sources/*.cpp   -c main.cpp  && g++ *.o -o Build/program -lsfml-graphics -lsfml-window -lsfml-system && ./Build/program && rm *.o
 </code> 
 
-<h2>Assets</h2>
-<table>
-    <tr>
-    <img src="Game/resources/ManBlack.png">
-    </tr>
-        <tr>
-    <img src="Game/resources/KingBlack.png">
-    </tr>
-        <tr>
-    <img src="Game/resources/ManWhite.png">
-    </tr>
-        <tr>
-    <img src="Game/resources/KingWhite.png">
-    </tr>
-</table>
-
 <h2>Final result</h2>
 <img src="ETC/retro.png">
