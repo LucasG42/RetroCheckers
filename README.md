@@ -11,11 +11,16 @@ Because this is my firt work with game development and SFML I made some decision
     To make the implementation easy I just think about make a simple code. Because the nature of this work some questions like Premature Optamization and Coupling was used. 
 </li>
 <li>
-    This is not a code make to be the better project possible, have some problems, because I not a senior developer in the moment, but how mencioned above some of "problems" are just implementation choices. 
+    This is not a code make to be the better project possible, have some problems, but how mencioned above some of these "problems" are just implementation choices. 
 </li>
 </ul>
 <h2>Bugs</h2>
-In my tests I find just one bug, sometimes the piece was captured but still in game.
+In my tests I find just two bugs:
+
+<ol>
+<li>Sometimes the piece disappear and sometimes the king can't capture a stone.</li>
+<li></li>
+</ol>
 
 
 <h2> My Environment </h2>
