@@ -1,4 +1,5 @@
 #include "../includes/Tile.hpp"
+#include "../includes/Application.hpp"
 #include "../includes/GameTypes.hpp"
 #include "../includes/Position.hpp"
 #include <SFML/Graphics.hpp>
@@ -11,10 +12,8 @@ Tile::Tile(Color color, Position position) {
   this->relativePosition = position.AbsolutePositionToRelativePosition(
       Tile::textureWidth, Tile::textureHeigth);
 
-  std::string filepath =
-      (color == white)
-          ? "/home/lucas/Documentos/Checkers/Game/resources/white.png"
-          : "/home/lucas/Documentos/Checkers/Game/resources/brown.png";
+  std::string filepath = resourcesPath;
+  filepath += (color == white) ? "white.png" : "brown.png";
 
   if (!texture.loadFromFile(filepath)) {
     std::cout << "Erro ao carregar texture"

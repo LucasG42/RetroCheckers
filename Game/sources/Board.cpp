@@ -75,14 +75,16 @@ void Board::Populate(sf::RenderWindow &window) {
   }
 }
 void Board::Update(sf::RenderWindow &window) {
-
+  for (int i = 0; i < pieces.size(); i++) {
+    if (pieces[i].alive == false) {
+      pieces.erase(pieces.begin() + i);
+    }
+  }
   for (auto &tile : tiles) {
     window.draw(tile.getSprite());
     window.draw(tile.getSelectedSprite());
   }
   for (auto piece : pieces) {
-    if (piece.alive == true) {
-      window.draw(piece.getSprite());
-    }
+    window.draw(piece.getSprite());
   }
 };

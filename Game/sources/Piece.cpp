@@ -1,4 +1,5 @@
 #include "../includes/Piece.hpp"
+#include "../includes/Application.hpp"
 #include "../includes/Board.hpp"
 #include "../includes/GameTypes.hpp"
 #include "../includes/Position.hpp"
@@ -13,19 +14,19 @@ Piece::Piece(Color color, Type type, Position absolutePosition,
     // White
     if (type) {
       // King
-      filepath = "/home/lucas/Documentos/Checkers/Game/resources/KingWhite.png";
+      filepath = resourcesPath + "KingWhite.png";
     } else {
       // Man
-      filepath = "/home/lucas/Documentos/Checkers/Game/resources/ManWhite.png";
+      filepath = resourcesPath + "ManWhite.png";
     }
   } else {
     // Black
     if (type) {
       // King
-      filepath = "/home/lucas/Documentos/Checkers/Game/resources/KingBlack.png";
+      filepath = resourcesPath + "KingBlack.png";
     } else {
       // Man
-      filepath = "/home/lucas/Documentos/Checkers/Game/resources/ManBlack.png";
+      filepath = resourcesPath + "ManBlack.png";
     }
   }
 
@@ -48,11 +49,9 @@ void Piece::turnKing() {
   sf::Image kingTexture;
   type = Type::king;
   if (color == Color::white) {
-    kingTexture.loadFromFile(
-        "/home/lucas/Documentos/Checkers/Game/resources/KingWhite.png");
+    kingTexture.loadFromFile(resourcesPath + "KingWhite.png");
   } else {
-    kingTexture.loadFromFile(
-        "/home/lucas/Documentos/Checkers/Game/resources/KingBlack.png");
+    kingTexture.loadFromFile(resourcesPath + "KingBlack.png");
   }
   texture.update(kingTexture);
   sprite.setTexture(texture);

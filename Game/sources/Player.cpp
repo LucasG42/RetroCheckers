@@ -124,8 +124,8 @@ void Player::MouseIsClicked(Position ClickPosition) {
         }
 
         tile.togglePiece();
-        board.previousTile->togglePiece();
         board.selectedPiece->Move(tile);
+        board.previousTile->togglePiece();
         invertColor();
       }
       break;
